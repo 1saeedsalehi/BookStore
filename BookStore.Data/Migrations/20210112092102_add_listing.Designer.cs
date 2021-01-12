@@ -4,14 +4,16 @@ using BookStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookStore.Data.Migrations
 {
     [DbContext(typeof(BookStoreDbContext))]
-    partial class BookStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210112092102_add_listing")]
+    partial class add_listing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,6 +81,9 @@ namespace BookStore.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<int?>("ListingId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
@@ -100,6 +105,8 @@ namespace BookStore.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ListingId");
 
                     b.ToTable("Books");
                 });
@@ -143,28 +150,6 @@ namespace BookStore.Data.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("BookStore.Domain.Entities.ListingBook", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ListingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("ListingId");
-
-                    b.ToTable("ListingBooks");
                 });
 
             modelBuilder.Entity("BookStore.Domain.Entities.ListingEntity", b =>
@@ -227,6 +212,10 @@ namespace BookStore.Data.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Entities.BookEntity", b =>
                 {
+                    b.HasOne("BookStore.Domain.Entities.ListingEntity", "Listing")
+                        .WithMany("Books")
+                        .HasForeignKey("ListingId");
+
                     b.OwnsOne("BookStore.Domain.ValueObjects.Money", "Price", b1 =>
                         {
                             b1.Property<int>("BookEntityId")
@@ -286,6 +275,8 @@ namespace BookStore.Data.Migrations
                                 .HasForeignKey("BookEntityId");
                         });
 
+                    b.Navigation("Listing");
+
                     b.Navigation("Name");
 
                     b.Navigation("Price");
@@ -324,25 +315,6 @@ namespace BookStore.Data.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("BookStore.Domain.Entities.ListingBook", b =>
-                {
-                    b.HasOne("BookStore.Domain.Entities.BookEntity", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BookStore.Domain.Entities.ListingEntity", "Listing")
-                        .WithMany()
-                        .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Listing");
-                });
-
             modelBuilder.Entity("BookStore.Domain.Entities.ListingEntity", b =>
                 {
                     b.OwnsOne("BookStore.Domain.ValueObjects.NotEmptyString", "Title", b1 =>
@@ -366,6 +338,11 @@ namespace BookStore.Data.Migrations
                         });
 
                     b.Navigation("Title");
+                });
+
+            modelBuilder.Entity("BookStore.Domain.Entities.ListingEntity", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

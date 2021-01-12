@@ -1,5 +1,4 @@
 ﻿using BookStore.Domain.Entities;
-using BookStore.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,8 +10,21 @@ namespace BookStore.Data.Configurations
         {
             builder.OwnsOne(book => book.Name, cfg =>
             {
+
                 cfg.Property(x => x.Value).HasColumnName("Name").HasMaxLength(100);
             });
+
+            //TODO: issue with owned property seed method!!!
+            //builder.HasData(new BookEntity
+            //{
+            //    Id = 1,
+            //    AuthorName = "رولف دوبلی",
+            //    Name = new NotEmptyString(),
+            //    CoverImage = "https://cdn.fidibo.com/images/books/100126_77640_normal.jpg",
+            //    Price = Money.From(20000),
+            //    Title = NotEmptyString.From("کتاب صوتی هنر شفاف اندیشیدن | اثر رولف دوبلی | با صدای عادل فردوسی پور"),
+            //    Publisher = "فیدیبو"
+            //});
 
             builder.OwnsOne(book => book.Title, cfg =>
             {
@@ -30,17 +42,7 @@ namespace BookStore.Data.Configurations
             builder.Property(x => x.Descripion).HasMaxLength(4000);
             builder.Property(x => x.Keywords).HasMaxLength(500);
 
-            //builder.HasData(new BookEntity
-            //{
-            //    Id = 1,
-            //    AuthorName = "رولف دوبلی",
-            //    Name = NotEmptyString.From("هنر شفاف اندیشیدن"),
-            //    CoverImage = "https://cdn.fidibo.com/images/books/100126_77640_normal.jpg",
-            //    Price = Money.From(20000),
-            //    Title = NotEmptyString.From("کتاب صوتی هنر شفاف اندیشیدن | اثر رولف دوبلی | با صدای عادل فردوسی پور"),
-            //    Publisher = "فیدیبو",
 
-            //});
         }
     }
 }

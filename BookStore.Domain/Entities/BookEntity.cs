@@ -1,5 +1,6 @@
 ﻿using BookStore.Domain.ValueObjects;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookStore.Domain.Entities
 {

@@ -18,5 +18,9 @@ namespace BookStore.Data
         public DbSet<BookEntity> Books { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<BookCategory> BookCategory { get; set; }
+        public DbSet<ListingEntity> Listings { get; set; }
+
+        public DbSet<ListingBook> ListingBooks { get; set; }
+
     }
 }

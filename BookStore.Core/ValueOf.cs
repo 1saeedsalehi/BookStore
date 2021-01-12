@@ -34,7 +34,7 @@ namespace BookStore.Core
             Factory = (Func<TThis>)lambda.Compile();
         }
 
-        public TValue Value { get; protected set; }
+        public TValue Value { get;  set; }
 
         public static TThis From(TValue item)
         {
