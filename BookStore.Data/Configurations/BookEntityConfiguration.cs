@@ -11,7 +11,7 @@ namespace BookStore.Data.Configurations
             builder.OwnsOne(book => book.Name, cfg =>
             {
 
-                cfg.Property(x => x.Value).HasColumnName("Name").HasMaxLength(100);
+                cfg.Property(x => x.Val).HasColumnName("Name").HasMaxLength(100);
             });
 
             //TODO: issue with owned property seed method!!!
@@ -28,12 +28,12 @@ namespace BookStore.Data.Configurations
 
             builder.OwnsOne(book => book.Title, cfg =>
             {
-                cfg.Property(x => x.Value).HasColumnName("Title").HasMaxLength(200);
+                cfg.Property(x => x.Val).HasColumnName("Title").HasMaxLength(200);
             });
 
             builder.OwnsOne(book => book.Price, cfg =>
             {
-                cfg.Property(x => x.Value).HasColumnName("Price");
+                cfg.Property(x => x.Val).HasColumnName("Price");
             });
             builder.Property(x => x.AuthorName).HasMaxLength(100);
             builder.Property(x => x.Translator).HasMaxLength(100);

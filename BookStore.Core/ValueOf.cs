@@ -34,12 +34,12 @@ namespace BookStore.Core
             Factory = (Func<TThis>)lambda.Compile();
         }
 
-        public TValue Value { get;  set; }
+        public TValue Val { get;  set; }
 
         public static TThis From(TValue item)
         {
             TThis x = Factory();
-            x.Value = item;
+            x.Val = item;
             x.Validate();
 
             return x;
@@ -47,7 +47,7 @@ namespace BookStore.Core
 
         protected virtual bool Equals(ValueOf<TValue, TThis> other)
         {
-            return EqualityComparer<TValue>.Default.Equals(Value, other.Value);
+            return EqualityComparer<TValue>.Default.Equals(Val, other.Val);
         }
 
         public override bool Equals(object obj)
@@ -63,7 +63,7 @@ namespace BookStore.Core
 
         public override int GetHashCode()
         {
-            return EqualityComparer<TValue>.Default.GetHashCode(Value);
+            return EqualityComparer<TValue>.Default.GetHashCode(Val);
         }
 
         public static bool operator ==(ValueOf<TValue, TThis> a, ValueOf<TValue, TThis> b)
@@ -84,7 +84,7 @@ namespace BookStore.Core
 
         public override string ToString()
         {
-            return Value.ToString();
+            return Val.ToString();
         }
     }
 }

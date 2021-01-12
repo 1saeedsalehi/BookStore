@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace BookStore.Dtos
 {
-    public class BookInputDto
+    public class BookListingDto
     {
-        public int Id { get; set; }
-       
-
+        public string ListingTitle { get; set; }
+        public List<BookDto> Books { get; set; }
     }
-    
 }

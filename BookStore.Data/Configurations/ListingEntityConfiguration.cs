@@ -14,7 +14,7 @@ namespace BookStore.Data.Configurations
             builder.OwnsOne(book => book.Title, cfg =>
             {
 
-                cfg.Property(x => x.Value).HasColumnName("Title").HasMaxLength(100);
+                cfg.Property(x => x.Val).HasColumnName("Title").HasMaxLength(100);
             });
         }
     }

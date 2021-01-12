@@ -8,7 +8,7 @@ namespace BookStore.Domain.ValueObjects
     {
         protected override void Validate()
         {
-            if (Value < 0)
+            if (Val < 0)
             {
                 throw new RestException(HttpStatusCode.BadRequest, Messages.NegativePriceError);
             }

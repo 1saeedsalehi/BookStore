@@ -8,7 +8,7 @@ namespace BookStore.Domain.ValueObjects
        
         protected override void Validate()
         {
-            if (string.IsNullOrEmpty(Value))
+            if (string.IsNullOrEmpty(Val))
             {
                 throw new RestException(System.Net.HttpStatusCode.BadRequest, Messages.NotEmptystirngError);
             }

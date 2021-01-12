@@ -6,6 +6,8 @@ using BookStore.Dtos;
 using BookStore.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -25,9 +27,7 @@ namespace BookStore.Controllers
             _mapper = mapper;
             _dbContext = dbContext;
         }
-        public class BookListingDto
-        {
-        }
+
 
         [HttpGet("search")]
         [ProducesResponseType(typeof(ResultModel<int>), (int)HttpStatusCode.OK)]
@@ -41,32 +41,64 @@ namespace BookStore.Controllers
                 .AsNoTracking()
                  .Include(x => x.Book)
                  .Include(x => x.Listing)
-                 .Where(x => x.Listing.Title.Value.Contains(searchQuery))
+                 .Where(x => x.Listing.Title.Val.Contains(searchQuery))
                  .AsEnumerable()
                  .GroupBy(x => x.Listing.Title);
-                 
+
 
 
             return Ok(result);
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(ResultModel<int>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResultModel<List<BookListingDto>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetAllBookListing([FromQuery] PaginationInputDto input, CancellationToken cancellationToken)
         {
 
-
-            var result =  _dbContext.ListingBooks
+            var result = new List<BookListingDto>();
+            var groupped = _dbContext.ListingBooks
                 .AsNoTracking()
                  .Include(x => x.Book)
                  .Include(x => x.Listing)
+                 .OrderByDescending(x => x.Listing.DisplayOrder)
                  .AsEnumerable()
                  .GroupBy(x => x.Listing.Title)
                  .Skip(input.Page - 1)
                  .Take(input.Page * input.PageSize);
-                 
+
+            //TODO: fix this! jsut for client side test!
+            foreach (var item in groupped)
+            {
+                var toAdd = new BookListingDto
+                {
+                    ListingTitle = item.Key.Val,
+                    Books = new List<BookDto>()
+
+                };
+                foreach (var book in item)
+                {
+                    toAdd.Books.Add(new BookDto
+                    {
+                        AuthorName = book.Book.AuthorName,
+                        CoverImage = book.Book.CoverImage,
+                        Descripion = book.Book.Descripion,
+                        Name = book.Book.Name.Val,
+                        PageCount = book.Book.PageCount,
+                        Price = book.Book.Price.Val,
+                        PublishedOn = book.Book.PublishedOn,
+                        Publisher = book.Book.Publisher,
+                        Title = book.Book.Title.Val,
+                        Translator = book.Book.Translator
+                    });
+
+
+                }
+                result.Add(toAdd);
+            }
+
+
 
             return Ok(result);
         }

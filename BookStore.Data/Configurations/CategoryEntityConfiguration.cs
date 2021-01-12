@@ -10,7 +10,7 @@ namespace BookStore.Data.Configurations
         {
             builder.OwnsOne(cat => cat.Name, cfg =>
             {
-                cfg.Property(x => x.Value).HasColumnName("Name").HasMaxLength(100);
+                cfg.Property(x => x.Val).HasColumnName("Name").HasMaxLength(100);
             });
 
         }
