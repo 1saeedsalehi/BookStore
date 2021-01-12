@@ -28,6 +28,28 @@ namespace BookStore.Controllers
         public class BookListingDto
         {
         }
+
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(ResultModel<int>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> SearchBookListing(string searchQuery, CancellationToken cancellationToken)
+        {
+
+
+            var result = _dbContext.ListingBooks
+                .AsNoTracking()
+                 .Include(x => x.Book)
+                 .Include(x => x.Listing)
+                 .Where(x => x.Listing.Title.Value.Contains(searchQuery))
+                 .AsEnumerable()
+                 .GroupBy(x => x.Listing.Title);
+                 
+
+
+            return Ok(result);
+        }
+
         [HttpGet]
         [ProducesResponseType(typeof(ResultModel<int>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -36,17 +58,17 @@ namespace BookStore.Controllers
         {
 
 
-            var result = await _dbContext.ListingBooks
+            var result =  _dbContext.ListingBooks
                 .AsNoTracking()
                  .Include(x => x.Book)
                  .Include(x => x.Listing)
-                 .GroupBy(x=>x.Listing)
-                 .Select(x=>x.FirstOrDefault())
+                 .AsEnumerable()
+                 .GroupBy(x => x.Listing.Title)
                  .Skip(input.Page - 1)
-                 .Take(input.Page * input.PageSize)
-                 .ToListAsync(cancellationToken);
+                 .Take(input.Page * input.PageSize);
+                 
 
-            return Ok(result.ToResultModel());
+            return Ok(result);
         }
 
         [HttpPost]
